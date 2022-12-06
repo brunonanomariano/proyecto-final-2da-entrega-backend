@@ -1,0 +1,38 @@
+[
+  {
+    "productos": [
+      {
+        "nombre": "escuadra1",
+        "descripcion": "util1",
+        "foto": "foto1",
+        "codigo": 100,
+        "precio": 100,
+        "stock": 5,
+        "id": 1,
+        "timestamp": 1670340058831
+      },
+      {
+        "nombre": "escuadra1",
+        "descripcion": "util1",
+        "foto": "foto1",
+        "codigo": 100,
+        "precio": 100,
+        "stock": 5,
+        "id": 2,
+        "timestamp": 1670340058831
+      },
+      {
+        "nombre": "escuadra1",
+        "descripcion": "util1",
+        "foto": "foto1",
+        "codigo": 100,
+        "precio": 100,
+        "stock": 5,
+        "id": 3,
+        "timestamp": 1670340058831
+      }
+    ],
+    "id": 1,
+    "timestamp": 1670340058831
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "nombre": "escuadra1",
+    "descripcion": "util1",
+    "foto": "foto1",
+    "codigo": 100,
+    "precio": 200,
+    "stock": 5,
+    "id": 1,
+    "timestamp": 1670266041069
+  },
+  {
+    "nombre": "escuadra",
+    "descripcion": "util",
+    "foto": "foto1",
+    "codigo": 120,
+    "precio": 200,
+    "stock": 11,
+    "id": 2,
+    "timestamp": 1670268125360
+  },
+  {
+    "nombre": "escuadra1",
+    "descripcion": "util1",
+    "foto": "foto1",
+    "codigo": 100,
+    "precio": 100,
+    "stock": 5,
+    "id": 4,
+    "timestamp": 1670268643266
+  }
+]
