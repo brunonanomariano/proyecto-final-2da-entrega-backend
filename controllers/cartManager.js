@@ -1,118 +1,70 @@
 const fs = require('fs');
 const path = require('path');
 const { json } = require('stream/consumers');
+const dotenv = require('dotenv')
+dotenv.config()
 
-const pathToFileCart = './data/carts.json'
+let managerCarrito
 
-async function agregarIdTimestampProd (carrito) {
-    let listadoProductos = carrito.productos
-    for (let i=0; i < listadoProductos.length; i++){
-        carrito.productos[i].id = i+1
-        carrito.productos[i].timestamp = Date.now()
-    }
-}
+switch (process.env.PERSISTENCIA) {
+    case "MONGO":
+        const cartModel = require('../models/cartModel')
+        const cartMongoDAO = require('../daos/cartMongoDAO')
+        managerCarrito = new cartMongoDAO (cartModel)
+        break
+    case "JSON":
+        const pathToFileCart = process.env.CARTJSON_URL
+        const CartJsonDAO = require('../daos/cartJSONDAO')
+        managerCarrito = new CartJsonDAO(pathToFileCart)
+        break
+    case "FIREBASE":
+        const CartFireBaseDAO = require('../daos/cartFireBaseDAO')
+        managerCarrito = new CartFireBaseDAO()
+        break
+    default:
+        console.log("Medio de persistencia no reconocido")
+        break
+}  
+
+//Descomentar el metodo que deba usarse
+
+//Utilizando Mongo
+//const managerCarrito = new cartMongoDAO (cartModel)
+
+//Utilizando Json
+//const managerCarrito = new CartJsonDAO(pathToFileCart)
+
+//Utilizando FireBase
+
 
 class CartManager {
 
     async add (carrito) {
-        if (!fs.existsSync(pathToFileCart)){
-            carrito.id = 1;
-            carrito.timestamp = Date.now()
-            await agregarIdTimestampProd(carrito)
-            await fs.promises.writeFile(pathToFileCart, JSON.stringify([carrito], null, 2));
-            return {status: 200, message: "Carrito agregado con exito", id: carrito.id}
-        } else {
-            let carts = await fs.promises.readFile(pathToFileCart, 'utf-8');
-            let newCarts = JSON.parse(carts);
-            let id = newCarts[newCarts.length-1].id + 1;
-            carrito.id = id;
-            carrito.timestamp = Date.now()
-            await agregarIdTimestampProd(carrito)
-            newCarts.push(carrito);
-            await fs.promises.writeFile(pathToFileCart, JSON.stringify(newCarts, null, 2));
-            return {status: 200, message: "Carrito agregado con exito", id: carrito.id}
-        } 
-
+        return await managerCarrito.add(carrito)        
     }
 
     async deleteCartById (id) {
 
-        if (fs.existsSync(pathToFileCart)){
-            let data = await fs.promises.readFile(pathToFileCart, 'UTF-8')
-            let carts = JSON.parse(data)
-            let cartsId = carts.map(item => item.id)
-            let idABuscar = parseInt(id)
-            let indice = cartsId.indexOf(idABuscar)
-            if(indice>-1){
-                let newCarts = carts.filter(item => item.id != parseInt(id))
-                await fs.promises.writeFile(pathToFileCart, JSON.stringify(newCarts, null, 2));
-                {return {status: 200, message: `Carrito con id ${id} eliminado`} }
-            }
-            else { return {status: 404, message: "Carrito no encontrado"} }
-        } else {
-            return {status: 404, message: "Base de carritos no disponible"}
-        } 
+        return await managerCarrito.deleteCartById(id) 
 
     }
 
     async listAll (id) {
-        if (fs.existsSync(pathToFileCart)){
-            let data = await fs.promises.readFile(pathToFileCart, 'UTF-8')
-            let carts = JSON.parse(data)
-            let cartsId = carts.map(item => item.id)
-            let idABuscar = parseInt(id)
-            let indice = cartsId.indexOf(idABuscar)
-            if(indice>-1){
-                {return {status: 200, message: carts[indice].productos} }
-            }
-            else { return {status: 404, message: "Carrito no encontrado"} }
-        } else {
-            return {status: 404, message: "Base de carritos no disponible"}
-        } 
+
+        return await managerCarrito.listAll(id) 
+
     }
 
     async addById (id, producto) {
-        if (fs.existsSync(pathToFileCart)){
-            let data = await fs.promises.readFile(pathToFileCart, 'UTF-8')
-            let carts = JSON.parse(data)
-            let cartsId = carts.map(item => item.id)
-            let idABuscar = parseInt(id)
-            let indice = cartsId.indexOf(idABuscar)
-            if(indice>-1){
-                producto.id = (carts[indice].productos.length+1)
-                producto.timestamp = Date.now()
-                carts[indice].productos.push(producto)
-                await fs.promises.writeFile(pathToFileCart, JSON.stringify(carts, null, 2));
-                {return {status: 200, message: `Se agrego el producto al carrito id ${id}`} }
-            }
-            else { return {status: 404, message: "Carrito no encontrado"} }
-        } else {
-            return {status: 404, message: "Base de carritos no disponible"}
-        }
+
+        return await managerCarrito.addById(id, producto) 
+    
     }
 
     async deleteProdById (idCart, idProd) {
-        if (fs.existsSync(pathToFileCart)){
-            let data = await fs.promises.readFile(pathToFileCart, 'UTF-8')
-            let carts = JSON.parse(data)
-            let cartsId = carts.map(item => item.id)
-            let idABuscar = parseInt(idCart)
-            let indice = cartsId.indexOf(idABuscar)
-            if(indice>-1){
-                let prodsId = carts[indice].productos.map(item => item.id)
-                let idABuscarProd = parseInt(idProd)
-                let indiceProd = prodsId.indexOf(idABuscarProd)
-                if (indiceProd > -1){
-                    let newProducts = carts[indice].productos.filter(item => item.id != parseInt(idProd))
-                    carts[indice].productos = newProducts
-                    await fs.promises.writeFile(pathToFileCart, JSON.stringify(carts, null, 2));
-                    {return {status: 200, message: `Prod con id ${idProd} eliminado del carrito con id ${idCart}`} }
-                } else { return {status: 404, message: "Producto no encontrado en el carrito"} }
-            }
-            else { return {status: 404, message: "Carrito no encontrado"} }
-        } else {
-            return {status: 404, message: "Base de carritos no disponible"}
-        }
+
+        return await managerCarrito.deleteProdById(idCart, idProd) 
+    
     }
 
 }

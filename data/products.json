@@ -28,5 +28,15 @@
     "stock": 5,
     "id": 4,
     "timestamp": 1670268643266
+  },
+  {
+    "nombre": "escuadra10",
+    "descripcion": "util10",
+    "foto": "foto10",
+    "codigo": 1000,
+    "precio": 500,
+    "stock": 90,
+    "id": 6,
+    "timestamp": 1672259685279
   }
 ]

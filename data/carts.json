@@ -12,24 +12,24 @@
         "timestamp": 1670340058831
       },
       {
-        "nombre": "escuadra1",
-        "descripcion": "util1",
+        "nombre": "escuadra",
+        "descripcion": "util",
         "foto": "foto1",
-        "codigo": 100,
-        "precio": 100,
-        "stock": 5,
-        "id": 2,
-        "timestamp": 1670340058831
+        "codigo": 120,
+        "precio": 200,
+        "stock": 10,
+        "id": 4,
+        "timestamp": 1672267242749
       },
       {
-        "nombre": "escuadra1",
-        "descripcion": "util1",
+        "nombre": "escuadra",
+        "descripcion": "util",
         "foto": "foto1",
-        "codigo": 100,
-        "precio": 100,
-        "stock": 5,
-        "id": 3,
-        "timestamp": 1670340058831
+        "codigo": 120,
+        "precio": 200,
+        "stock": 10,
+        "id": 5,
+        "timestamp": 1672267309181
       }
     ],
     "id": 1,

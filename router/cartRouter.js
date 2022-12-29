@@ -16,50 +16,37 @@ router.post('/', (req, res) => {
 
 router.delete('/:id', (req, res) => {
     let paramId = req.params.id
-    if (isNaN(paramId)){
-        res.status(400).send( {status: 400, message: "Se ha enviado un id no numerico"} )
-    } else {
-        manejadorCarritos.deleteCartById(paramId)
-            .then(result => res.status(result.status).send(result));
-    }
+    manejadorCarritos.deleteCartById(paramId)
+        .then(result => res.status(result.status).send(result));
 })
 
 
 router.get('/:id/productos', (req, res) => {
     let paramId = req.params.id
-    if (isNaN(paramId)){
-        res.status(400).send( {status: 400, message: "Se ha enviado un id no numerico"} )
-    } else {
-        manejadorCarritos.listAll(paramId)
-            .then(result => res.status(result.status).send(result));
-    }
+    manejadorCarritos.listAll(paramId)
+        .then(result => res.status(result.status).send(result));
+    
 })
 
 router.post('/:id/productos', (req, res) => {
     let paramId = req.params.id
-    if (isNaN(paramId)){
-        res.status(400).send( {status: 400, message: "Se ha enviado un id no numerico"} )
+    if ((!req.body.nombre) || (!req.body.descripcion) || (!req.body.codigo) || 
+        (!req.body.foto) || (!req.body.precio) || (!req.body.stock))  {
+        res.status(400).send({status: 400, message: "No se recibieron todos los campos requeridos"})
     } else {
-        if ((!req.body.nombre) || (!req.body.descripcion) || (!req.body.codigo) || 
-            (!req.body.foto) || (!req.body.precio) || (!req.body.stock))  {
-            res.status(400).send({status: 400, message: "No se recibieron todos los campos requeridos"})
-        } else {
-            manejadorCarritos.addById(paramId, req.body)
-                .then(result => res.status(result.status).send(result));
-        }
+        manejadorCarritos.addById(paramId, req.body)
+            .then(result => res.status(result.status).send(result));
     }
+    
 })
 
 router.delete('/:id/productos/:id_prod', (req, res) => {
     let paramIdCart = req.params.id
     let paramIdProd = req.params.id_prod
 
-    if ( (isNaN(paramIdCart)) || (isNaN(paramIdProd)) ) {
-        res.status(400).send( {status: 400, message: "Se ha enviado un id no numerico"} )
-    } else{
-        manejadorCarritos.deleteProdById(paramIdCart, paramIdProd)
-            .then(result => res.status(result.status).send(result));
-    }
+
+    manejadorCarritos.deleteProdById(paramIdCart, paramIdProd)
+        .then(result => res.status(result.status).send(result));
 
 })
 
